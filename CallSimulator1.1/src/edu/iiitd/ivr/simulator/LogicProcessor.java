@@ -1,5 +1,8 @@
 package edu.iiitd.ivr.simulator;
 
+import edu.iiitd.ivr.simulator.model.IUM.ObjectFactory;
+import edu.iiitd.ivr.simulator.model.IUM.IntricateUM;
+import edu.iiitd.ivr.simulator.model.SUM.SimpleUM;
 import edu.iiitd.ivr.simulator.model.*;
 import java.io.*;
 import java.net.ServerSocket;
@@ -36,6 +39,7 @@ public class LogicProcessor extends Thread {
     static CallContext callContext = new CallContext();
     public static String userstatus;
     String statitics="Call Load";
+    public String usermodel="intricate";
     String StatsDir= "/media/FA3E25CE3E25852B/Sid_svn/ICPE2013/Data/";
     public static CallContext getCallContext() {
         return callContext;
@@ -91,7 +95,8 @@ public class LogicProcessor extends Thread {
      * List structure to store calls in sequential order.
      */
     List<Call> callList = new ArrayList<Call>();
-    Calls clList = new Calls();
+    IntricateUM clList = new IntricateUM();
+    SimpleUM clList1 = new SimpleUM();
     /*
      * class outpt implements Runnable { public void run() { try { while
      * (is.ready()) { System.out.print(is.read()); } } catch (IOException e) {
@@ -103,9 +108,16 @@ public class LogicProcessor extends Thread {
      * explicitly calls loadIVRMenu() and loadCallEvents().
      */
     public void loadData() {
-        loadIVRMenu();
+        //loadIVRMenu();
         //loadCallEvents();
-        loadCalls();
+        System.out.println("Called load data with usermodel"+ usermodel);
+        if(usermodel.equals("intricate")){
+        
+            loadCallsIUM();
+        }else if(usermodel.equals("simple")){
+        callsSUM();
+        }
+        
         initSIP();
     }
 
@@ -113,11 +125,11 @@ public class LogicProcessor extends Thread {
      * Method to start simulation.
      */
     public void simulate() {
-        Calls.Call cl = new ObjectFactory().createCallsCall();
+        IntricateUM.Call cl = new ObjectFactory().createCallsCall();
         timer = new Timer();
         //Iterable t = clList.getCall().iterator()
-        List<Calls.Call> t = clList.getCall();
-        for (Iterator<Calls.Call> it = clList.getCall().iterator(); it.hasNext();) {
+        List<IntricateUM.Call> t = clList.getCall();
+        for (Iterator<IntricateUM.Call> it = clList.getCall().iterator(); it.hasNext();) {
             cl = it.next();
 
         }
@@ -176,16 +188,16 @@ public class LogicProcessor extends Thread {
     /**
      * Reads the call log and loads the call events into memory.
      */
-    private void loadCalls() {
+    private void loadCallsIUM() {
         JAXBContext jaxbContext;
         ObjectFactory objFactory;
         Unmarshaller unmarshaller;
         try {
-            jaxbContext = JAXBContext.newInstance("edu.iiitd.ivr.simulator.model");
+            jaxbContext = JAXBContext.newInstance("edu.iiitd.ivr.simulator.model.IUM");
             objFactory = new ObjectFactory();
             unmarshaller = jaxbContext.createUnmarshaller();
             try {
-                clList = (Calls) unmarshaller.unmarshal(new FileInputStream(logfile));
+                clList = (IntricateUM) unmarshaller.unmarshal(new FileInputStream(logfile));
                 //callList=clList.getCall();
                 //clList.getCall().get(0).getEvents().get(0).  
             } catch (FileNotFoundException ex) {
@@ -195,14 +207,14 @@ public class LogicProcessor extends Thread {
             Logger.getLogger(LogicProcessor.class.getName()).log(Level.SEVERE, null, ex);
         }
         //**********will be removed later
-        Calls.Call cl = new ObjectFactory().createCallsCall();
+        IntricateUM.Call cl = new ObjectFactory().createCallsCall();
         //List<Calls.Call> t =  clList.getCall();
-        for (Iterator<Calls.Call> it = clList.getCall().iterator(); it.hasNext();) {
+        for (Iterator<IntricateUM.Call> it = clList.getCall().iterator(); it.hasNext();) {
             cl = it.next();
             Call Currentevent = new Call();
             Currentevent.Callid = cl.getMetadata().getTimeStamp();
-            Calls.Call.Events ev = new ObjectFactory().createCallsCallEvents();
-            for (Iterator<Calls.Call.Events> eit = cl.getEvents().iterator(); eit.hasNext();) {
+            IntricateUM.Call.Events ev = new ObjectFactory().createCallsCallEvents();
+            for (Iterator<IntricateUM.Call.Events> eit = cl.getEvents().iterator(); eit.hasNext();) {
                 ev = eit.next();
                 Currentevent.time.add(Integer.parseInt(ev.getTime()));
                 Currentevent.key.add(Integer.parseInt(ev.getData()));
@@ -216,7 +228,46 @@ public class LogicProcessor extends Thread {
         }
         //**************
     }
-
+    private void callsSUM(){
+    JAXBContext jaxbContext;
+        edu.iiitd.ivr.simulator.model.SUM.ObjectFactory objFactory;
+        Unmarshaller unmarshaller;
+        try {
+            jaxbContext = JAXBContext.newInstance("edu.iiitd.ivr.simulator.model.SUM");
+            objFactory = new edu.iiitd.ivr.simulator.model.SUM.ObjectFactory();
+            unmarshaller = jaxbContext.createUnmarshaller();
+            try {
+                clList1 =  (SimpleUM) unmarshaller.unmarshal(new FileInputStream(logfile));
+                //callList=clList.getCall();
+                //clList.getCall().get(0).getEvents().get(0).  
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(LogicProcessor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (JAXBException ex) {
+            Logger.getLogger(LogicProcessor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //**********will be removed later
+        //SimpleUM.Call cl = new ObjectFactory().createCallsCall();
+        SimpleUM.Call cl = new edu.iiitd.ivr.simulator.model.SUM.ObjectFactory().createCallsCall();
+        //List<Calls.Call> t =  clList.getCall();
+        int sum=0;
+        for (Iterator<SimpleUM.Call> it = clList1.getCall().iterator(); it.hasNext();) {
+        sum++;
+        System.out.println("Calss added "+ sum);
+            cl = it.next();
+            Call Currentevent = new Call();
+            Currentevent.Callid = cl.getMetadata().getTimeStamp();
+            SimpleUM.Call.Events ev = new edu.iiitd.ivr.simulator.model.SUM.ObjectFactory().createCallsCallEvents();
+            for (Iterator<SimpleUM.Call.Events> eit = cl.getEvents().iterator(); eit.hasNext();) {
+                ev = eit.next();
+                Currentevent.time.add(Integer.parseInt(ev.getTime()));
+                Currentevent.key.add(Integer.parseInt(ev.getData()));
+                Currentevent.userstatus.add("User waiting for annoucement number "+ev.getData());
+            }
+            callList.add(Currentevent);
+        }
+        
+    }
     private void loadCallEvents() {
         // TODO Auto-generated method stub
 

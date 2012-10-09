@@ -43,6 +43,10 @@ public class Visualizer extends javax.swing.JFrame {
         Txt_Extension = new javax.swing.JTextField();
         Txt_ServerIP = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
+        Dlg_UM = new javax.swing.JDialog();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
+        jLabel17 = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         Lbl_FilePath = new javax.swing.JLabel();
@@ -89,6 +93,7 @@ public class Visualizer extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         Dlg_configuration.setTitle("SIP Server Configuration");
 
@@ -152,6 +157,50 @@ public class Visualizer extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addComponent(jButton5)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jRadioButton1.setText("Simple");
+        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton1ActionPerformed(evt);
+            }
+        });
+
+        jRadioButton2.setText("Intricate");
+        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton2ActionPerformed(evt);
+            }
+        });
+
+        jLabel17.setText("Select a user model");
+
+        javax.swing.GroupLayout Dlg_UMLayout = new javax.swing.GroupLayout(Dlg_UM.getContentPane());
+        Dlg_UM.getContentPane().setLayout(Dlg_UMLayout);
+        Dlg_UMLayout.setHorizontalGroup(
+            Dlg_UMLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(Dlg_UMLayout.createSequentialGroup()
+                .addGroup(Dlg_UMLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(Dlg_UMLayout.createSequentialGroup()
+                        .addGap(81, 81, 81)
+                        .addComponent(jRadioButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jRadioButton2))
+                    .addGroup(Dlg_UMLayout.createSequentialGroup()
+                        .addGap(100, 100, 100)
+                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(126, Short.MAX_VALUE))
+        );
+        Dlg_UMLayout.setVerticalGroup(
+            Dlg_UMLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(Dlg_UMLayout.createSequentialGroup()
+                .addGap(44, 44, 44)
+                .addComponent(jLabel17)
+                .addGap(37, 37, 37)
+                .addGroup(Dlg_UMLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jRadioButton1)
+                    .addComponent(jRadioButton2))
+                .addContainerGap(178, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -290,7 +339,7 @@ public class Visualizer extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(34, 34, 34)
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -564,6 +613,14 @@ public class Visualizer extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem1);
 
+        jMenuItem2.setText("User Model");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
         jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
@@ -764,6 +821,23 @@ simulatorController.DTMFtest();
         simulatorController.setServer_ip(Txt_ServerIP.getText());
         Dlg_configuration.show(false);
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        Dlg_UM.setSize(500, 300);
+        Dlg_UM.setAlwaysOnTop(true);
+        Dlg_UM.show(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+        // TODO add your handling code here:
+        simulatorController.usermodel="simple";
+    }//GEN-LAST:event_jRadioButton1ActionPerformed
+
+    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+        // TODO add your handling code here:
+        simulatorController.usermodel="intricate";
+    }//GEN-LAST:event_jRadioButton2ActionPerformed
 public class Mesgupdate extends TimerTask{
 
         @Override
@@ -863,6 +937,7 @@ public class Simulationupdate extends TimerTask{
     private javax.swing.JButton Btn_LoadData;
     private javax.swing.JButton Btn_RandomizeCallOrder;
     private javax.swing.JButton Btn_StartSimulation;
+    private javax.swing.JDialog Dlg_UM;
     private javax.swing.JDialog Dlg_configuration;
     private javax.swing.JLabel Lbl_FilePath;
     private javax.swing.JList Lst_Call;
@@ -886,6 +961,7 @@ public class Simulationupdate extends TimerTask{
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -897,6 +973,7 @@ public class Simulationupdate extends TimerTask{
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -904,6 +981,8 @@ public class Simulationupdate extends TimerTask{
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
