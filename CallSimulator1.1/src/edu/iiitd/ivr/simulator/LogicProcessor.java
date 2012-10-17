@@ -141,13 +141,14 @@ public class LogicProcessor extends Thread {
         // startCall();
         int timecorrection = 0;
         timer = new Timer();
-        
-        for (Call e : callList) {
-            
-            timer.schedule(new Event(this, "call"), timecorrection * 1000);
+        int callid=0;
+if(this.usermodel.equals("intricate")){
+for (Call e : callList) {
+            callid++;
+            timer.schedule(new Event(this, "call",String.valueOf(callid)), timecorrection * 1000);
             int i = 0;
             for (Integer key : e.key) {
-                timer.schedule(new Event(this, key),
+                timer.schedule(new Event(this, e.key.get(i),String.valueOf(callid),e.Loop.get(i),e.ElementAT.get(i),e.ElementRequested.get(i)),
                         (e.time.get(i) + timecorrection) * 1000);
                 i++;
             }
@@ -158,13 +159,39 @@ public class LogicProcessor extends Thread {
                 i++;
             }
             if (i > 0) {
-                timer.schedule(new Event(this, "end"),
+                timer.schedule(new Event(this, "end",String.valueOf(callid)),
                         (e.time.get(i - 1) + 10 + timecorrection) * 1000);
                 timecorrection = e.time.get(i - 1) + 12 + timecorrection;
             } else {
                 timecorrection += 2;
             }
         }
+}        
+else
+        {for (Call e : callList) {
+            callid++;
+            timer.schedule(new Event(this, "call",String.valueOf(callid)), timecorrection * 1000);
+            int i = 0;
+            for (Integer key : e.key) {
+                timer.schedule(new Event(this, key,String.valueOf(callid),"","",""),
+                        (e.time.get(i) + timecorrection) * 1000);
+                i++;
+            }
+            i = 0;
+            for (String mesg : e.userstatus) {
+                timer.schedule(new Event(this, "userstatus", mesg),
+                        (e.time.get(i) + timecorrection) * 1000);
+                i++;
+            }
+            if (i > 0) {
+                timer.schedule(new Event(this, "end",String.valueOf(callid)),
+                        (e.time.get(i - 1) + 10 + timecorrection) * 1000);
+                timecorrection = e.time.get(i - 1) + 12 + timecorrection;
+            } else {
+                timecorrection += 2;
+            }
+        }
+    }
     }
 
     /**
@@ -218,6 +245,9 @@ public class LogicProcessor extends Thread {
                 ev = eit.next();
                 Currentevent.time.add(Integer.parseInt(ev.getTime()));
                 Currentevent.key.add(Integer.parseInt(ev.getData()));
+                Currentevent.Loop.add(ev.getContextinfo().getLoops());
+                Currentevent.ElementAT.add(ev.getContextinfo().getElementAT());
+                Currentevent.ElementRequested.add(ev.getContextinfo().getElementRequested());
                 if (ev.getContextinfo().getUserCategory().contains("unsure")) {
                     Currentevent.userstatus.add("User is not sure what to choose");
                 } else {

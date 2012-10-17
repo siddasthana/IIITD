@@ -16,46 +16,71 @@ import java.util.TimerTask;
 public class Event extends TimerTask {
 
     int key;
-    String temp = "", mesg="";
+    String temp = "", mesg = "";
     LogicProcessor sm;
+    String Callid;
+    String Loop, ElemenAT, Elementreq;
 
     /**
-     * 
+     *
      * @param smlt
      * @param x
      */
-    public Event(LogicProcessor smlt, int x) {
+    public Event(LogicProcessor smlt, int x, String cid, String Lp, String ElAT, String ElRequested) {
         this.key = x;
         this.sm = smlt;
+        this.Callid = cid;
+        this.Loop = Lp;
+        this.ElemenAT = ElAT;
+        this.Elementreq = ElRequested;
     }
 
     /**
-     * 
+     *
      * @param smlt
      * @param t
      */
-    public Event(LogicProcessor smlt, String t) {
+    public Event(LogicProcessor smlt, String t, String cid) {
         this.temp = t;
         this.sm = smlt;
+        this.Callid = cid;
     }
-   public Event(LogicProcessor smlt, String t, String value) {
+
+    public Event(LogicProcessor smlt, String t, String value, String cid) {
         this.temp = t;
         this.sm = smlt;
         this.mesg = value;
+        this.Callid = cid;
     }
+
     /**
-     * 
+     *
      */
     public void run() {
         try {
             if (temp.equals("call")) {
                 sm.startCall();
             } else if (temp.equals("end")) {
-                 sm.terminateCall();
-            }else if (temp.equals("userstatus")) {
+                sm.terminateCall();
+            } else if (temp.equals("userstatus")) {
                 sm.setuserstatus(mesg);
             } else {
-                sm.sendDTMF(key);
+                if (sm.usermodel.equals("intricate")) {
+                    boolean exct = false;
+                    while (!exct){
+                    for (int i = 0; i < LogicProcessor.getCallContext().CallId.size(); i++) {
+                            String[] metainfo = LogicProcessor.getCallContext().getContext(i).split(",");
+                            if (metainfo[2].equals(Callid)) {
+                                if (metainfo[0].equals(Elementreq)) {
+                                    sm.sendDTMF(key);
+                            exct=true;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    sm.sendDTMF(key);
+                }
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block

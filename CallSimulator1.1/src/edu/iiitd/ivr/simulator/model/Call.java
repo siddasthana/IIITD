@@ -33,6 +33,11 @@ public class Call {
      */
     public List<Integer> key = new ArrayList<Integer>();
      public List<String> userstatus = new ArrayList<String>();
+     public List<String> Loop = new ArrayList<String>();
+     public List<String> ElementAT = new ArrayList<String>();
+     public List<String> ElementRequested = new ArrayList<String>();
+     //public List<String>  = new ArrayList<String>();
+     
     //public List<Integer[][]> event = new ArrayList<Integer[][]>();
     @Override
     public String toString() {
